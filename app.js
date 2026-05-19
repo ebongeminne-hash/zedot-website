@@ -416,53 +416,45 @@ if (contactForm) {
     launcher.addEventListener('click', () => panel.classList.add('active'));
     closeBtn.addEventListener('click', () => panel.classList.remove('active'));
 
-    const botBrain = {
-        "services": "We offer Software Development, DevOps & Cloud, AI & Automation, Cybersecurity, Data Engineering, QA, and Research.",
-        "price": "Our engagements vary depending on scope. For custom software or cloud migrations, drop us a line and we'll scope it out.",
-        "cost": "Our engagements vary depending on scope. For custom software or cloud migrations, drop us a line and we'll scope it out.",
-        "time": "We run 2-week agile sprints. MVP delivery usually takes between 6 to 12 weeks depending on complexity.",
-        "ai": "Yes, we integrate ML models, build RAG pipelines, and automate workflows using AI. African-built AI is our focus.",
-        "compliance": "We are compliant by design—adhering to NDPR, GDPR, ISO 27001, and SOC 2 frameworks. Security is baked in.",
-        "hire": "We are always looking for top-tier African engineering talent. Check out our Reach Out page.",
-        "portfolio": "We've built logistics platforms handling 10k concurrents, fintech APIs, and healthcare ML pipelines.",
-        "who": "Zedot was founded by a team of 6 specialized engineers and researchers who believe African tech can lead globally.",
-        "non-technical": "Absolutely. We translate your business requirements into technical reality. You don't need to write code to work with us.",
-        "safe": "Your data is secured using zero-trust architecture, encryption in transit/rest, and regular penetration testing.",
-        "industry": "We serve Fintech, Healthtech, Logistics, Energy, Retail, Public Sector, and Telecoms.",
-        "mobile": "Yes, we build scalable cross-platform mobile applications using modern frameworks.",
-        "contact": "You can reach us at support@zedot.tech or use the form on our Reach Out page."
-    };
-
-    chatForm.addEventListener('submit', (e) => {
+    // --- DOTTY CHAT — live Anthropic API ---
+    let chatHistory = [];
+    chatForm.addEventListener('submit', async (e) => {
         e.preventDefault();
         const text = chatInput.value.trim();
         if(!text) return;
 
-        // Add user message
         const uMsg = document.createElement('div');
         uMsg.className = 'chat-msg msg-user';
         uMsg.innerText = text;
         messagesBox.appendChild(uMsg);
         chatInput.value = '';
 
-        // Determine bot response
-        let reply = "I'm not quite sure I understand. Could you rephrase or ask about our services, team, or how to get in touch?";
-        const lower = text.toLowerCase();
-        for(let key in botBrain) {
-            if(lower.includes(key)) {
-                reply = botBrain[key];
-                break;
-            }
-        }
+        const thinking = document.createElement('div');
+        thinking.className = 'chat-msg msg-bot';
+        thinking.innerText = '...';
+        messagesBox.appendChild(thinking);
+        messagesBox.scrollTop = messagesBox.scrollHeight;
 
-        // Delay for realism
-        setTimeout(() => {
-            const bMsg = document.createElement('div');
-            bMsg.className = 'chat-msg msg-bot';
-            bMsg.innerText = reply;
-            messagesBox.appendChild(bMsg);
-            messagesBox.scrollTop = messagesBox.scrollHeight;
-        }, 600);
+        try {
+            const response = await fetch('/api/chat', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ message: text, history: chatHistory })
+            });
+            const result = await response.json();
+
+            if(response.ok && result.reply) {
+                thinking.innerText = result.reply;
+                chatHistory.push({ role: 'user', content: text });
+                chatHistory.push({ role: 'assistant', content: result.reply });
+                if(chatHistory.length > 12) chatHistory = chatHistory.slice(-12);
+            } else {
+                thinking.innerText = result.error || 'Something went wrong. Try again.';
+            }
+        } catch(err) {
+            thinking.innerText = 'Network error. Please retry.';
+        }
+        messagesBox.scrollTop = messagesBox.scrollHeight;
     });
 
     // Mobile Hamburger Toggle
