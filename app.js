@@ -296,29 +296,72 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-
+    
     // --- 8. REACH OUT FORM SUBMIT ---
-    const contactForms = [document.getElementById('contactForm'), document.getElementById('landingContactForm')];
-    contactForms.forEach(form => {
-        if(form) {
-            form.addEventListener('submit', (e) => {
-                e.preventDefault();
-                const btn = form.querySelector('button');
-                const origText = btn.innerText;
-                btn.innerText = 'Sending...';
-                
-                setTimeout(() => {
-                    form.reset();
-                    btn.innerText = origText;
-                    const toast = document.getElementById('successToast');
-                    toast.classList.add('active');
-                    setTimeout(() => toast.classList.remove('active'), 3000);
-                }, 1000);
-            });
+    const contactForm = document.querySelector('#contact form');
+const sendButton = document.querySelector('#contact .send-btn, #contact button[type="submit"]');
+const successMsg = document.querySelector('.form-success, .success-message');
+
+if (contactForm) {
+  contactForm.addEventListener('submit', async function (e) {
+    e.preventDefault();
+
+    const nameField     = contactForm.querySelector('input[name="name"], input[placeholder*="name" i]');
+    const emailField    = contactForm.querySelector('input[name="email"], input[type="email"]');
+    const companyField  = contactForm.querySelector('input[name="company"], input[placeholder*="company" i]');
+    const howHeardField = contactForm.querySelector('select[name="how_heard"], select');
+    const messageField  = contactForm.querySelector('textarea');
+
+    const payload = {
+      name:      nameField?.value?.trim()     || '',
+      email:     emailField?.value?.trim()    || '',
+      company:   companyField?.value?.trim()  || '',
+      how_heard: howHeardField?.value         || '',
+      message:   messageField?.value?.trim()  || ''
+    };
+
+    if (!payload.name || !payload.email || !payload.message) {
+      alert('Please fill in your name, email, and message.');
+      return;
+    }
+
+    if (sendButton) {
+      sendButton.textContent = 'Sending...';
+      sendButton.disabled = true;
+    }
+
+    try {
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+
+      const result = await response.json();
+
+      if (response.ok && result.success) {
+        contactForm.reset();
+        if (successMsg) successMsg.style.display = 'block';
+        if (sendButton) sendButton.textContent = 'Message Received ✓';
+      } else {
+        alert(result.error || 'Something went wrong. Please try again.');
+        if (sendButton) {
+          sendButton.textContent = 'Send It';
+          sendButton.disabled = false;
         }
-    });
+      }
+    } catch (err) {
+      console.error(err);
+      alert('Network error. Please try again.');
+      if (sendButton) {
+        sendButton.textContent = 'Send It';
+        sendButton.disabled = false;
+      }
+    }
+  });
+}
 
-
+    
     // --- 9. INTERSECTION OBSERVER FOR FADE-INS ---
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
