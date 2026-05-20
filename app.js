@@ -440,13 +440,3 @@ document.addEventListener('DOMContentLoaded', () => {
         messagesBox.scrollTop = messagesBox.scrollHeight;
     });
 
-    // Mobile Hamburger Toggle
-    const hamburger = document.getElementById('hamburgerBtn');
-    const navMenu = document.getElementById('navLinks');
-    if(hamburger) {
-        hamburger.addEventListener('click', () => {
-            navMenu.classList.toggle('active');
-        });
-    }
-
-});
