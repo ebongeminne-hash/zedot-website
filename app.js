@@ -399,6 +399,64 @@ document.addEventListener('DOMContentLoaded', () => {
     launcher.addEventListener('click', () => panel.classList.add('active'));
     closeBtn.addEventListener('click', () => panel.classList.remove('active'));
 
+    // --- CALENDLY POPUP INTEGRATION ---
+    const bookButtons = [
+        document.getElementById('navBookBtn'),
+        document.getElementById('heroBookBtn'),
+        document.getElementById('dottyBookBtn')
+    ];
+    
+    bookButtons.forEach(btn => {
+        if(btn) {
+            btn.addEventListener('click', (e) => {
+                e.preventDefault();
+                if (typeof Calendly !== 'undefined') {
+                    Calendly.initPopupWidget({ url: 'https://calendly.com/ebongeminne/30min' });
+                } else {
+                    console.warn('Calendly script not loaded, opening in new tab');
+                    window.open('https://calendly.com/ebongeminne/30min', '_blank');
+                }
+            });
+        }
+    });
+
+    // Initialize Calendly badge widget (positioned on the bottom-left to avoid clashing with Dotty in the bottom-right)
+    window.addEventListener('load', () => {
+        if (typeof Calendly !== 'undefined') {
+            Calendly.initBadgeWidget({
+                url: 'https://calendly.com/ebongeminne/30min',
+                text: 'Schedule time with me',
+                color: '#0069ff',
+                textColor: '#ffffff',
+                branding: true
+            });
+        }
+    });
+
+    // Helper to format chatbot responses (HTML escaping, bold, and markdown-like links)
+    function formatMessage(text) {
+        let escaped = text
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;");
+        
+        // Support bold: **text**
+        escaped = escaped.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+        
+        // Support markdown links [text](url) -> if it's a Calendly url, trigger the popup programmatically
+        escaped = escaped.replace(/\[([^\]]+)\]\(([^)]+)\)/g, (match, linkText, url) => {
+            if (url.includes('calendly.com')) {
+                return `<button class="chat-booking-btn" onclick="if(typeof Calendly !== 'undefined'){ Calendly.initPopupWidget({url: '${url}'}); } else { window.open('${url}', '_blank'); } return false;">${linkText}</button>`;
+            }
+            return `<a href="${url}" target="_blank" rel="noopener noreferrer">${linkText}</a>`;
+        });
+
+        // Convert newlines to breaks
+        escaped = escaped.replace(/\n/g, '<br>');
+
+        return escaped;
+    }
+
     // --- DOTTY CHAT — live Anthropic API ---
     let chatHistory = [];
     chatForm.addEventListener('submit', async (e) => {
@@ -427,7 +485,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const result = await response.json();
 
             if(response.ok && result.reply) {
-                thinking.innerText = result.reply;
+                thinking.innerHTML = formatMessage(result.reply);
                 chatHistory.push({ role: 'user', content: text });
                 chatHistory.push({ role: 'assistant', content: result.reply });
                 if(chatHistory.length > 12) chatHistory = chatHistory.slice(-12);

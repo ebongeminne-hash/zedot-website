@@ -352,6 +352,96 @@ h1, h2, h3, h4, h5, h6, .logo { font-family: 'Syne', sans-serif; letter-spacing:
 .dotty-input-area input { flex: 1; background: rgba(255,255,255,0.05); border: var(--glass-border); border-radius: 20px; padding: 10px 16px; color: white; outline: none; }
 .dotty-input-area button { background: var(--turquoise); border: none; width: 40px; height: 40px; border-radius: 50%; color: var(--bg-dark); cursor: pointer; }
 
+/* Booking CTA buttons */
+.btn-pill-booking {
+    background: linear-gradient(135deg, var(--deep-teal), var(--electric-blue)); 
+    color: #fff !important; 
+    padding: 10px 24px; 
+    border-radius: 30px; 
+    font-weight: 600; 
+    text-decoration: none; 
+    display: inline-block; 
+    transition: all 0.3s;
+    box-shadow: 0 0 15px rgba(30, 144, 255, 0.25); 
+    font-family: 'Syne', sans-serif; 
+    border: none;
+    cursor: pointer;
+}
+.btn-pill-booking:hover {
+    box-shadow: 0 0 30px rgba(30, 144, 255, 0.45); 
+    transform: translateY(-2px);
+}
+
+.dotty-header-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.btn-dotty-book {
+    background: linear-gradient(135deg, var(--deep-teal), var(--electric-blue));
+    border: none;
+    padding: 6px 14px;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    font-family: 'Syne', sans-serif;
+    font-weight: 600;
+    color: white;
+    cursor: pointer;
+    transition: all 0.3s;
+    box-shadow: 0 0 10px rgba(30, 144, 255, 0.2);
+}
+.btn-dotty-book:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 0 15px rgba(30, 144, 255, 0.4);
+}
+
+/* Chat Dynamic Booking Buttons */
+.chat-booking-btn {
+    display: inline-block;
+    background: linear-gradient(135deg, var(--deep-teal), var(--electric-blue));
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 12px;
+    font-family: 'Syne', sans-serif;
+    font-weight: 600;
+    font-size: 0.85rem;
+    cursor: pointer;
+    margin-top: 8px;
+    transition: all 0.3s;
+    box-shadow: 0 4px 10px rgba(30, 144, 255, 0.2);
+    text-decoration: none;
+}
+.chat-booking-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 15px rgba(30, 144, 255, 0.35);
+}
+.msg-bot a {
+    color: var(--turquoise);
+    text-decoration: underline;
+    font-weight: 500;
+}
+.msg-bot a:hover {
+    color: white;
+}
+
+/* Reposition Calendly badge widget to bottom-left to prevent overlap with Dotty */
+.calendly-badge-widget {
+    right: auto !important;
+    left: 24px !important;
+}
+@media (max-width: 768px) {
+    .calendly-badge-widget {
+        left: 12px !important;
+        bottom: 12px !important;
+        font-size: 14px !important;
+        padding: 0 16px !important;
+        height: 40px !important;
+        line-height: 40px !important;
+    }
+}
+
 /* Global Footer V6 */
 .master-footer {
     padding: 24px 0; text-align: center; position: relative; z-index: 10;

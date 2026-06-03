@@ -9,6 +9,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Syne:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <!-- Calendly popup widget assets -->
+    <link href="https://assets.calendly.com/assets/external/widget.css" rel="stylesheet">
 </head>
 <body>
     <!-- Global Loader (Wormhole Miniature) -->
@@ -80,6 +82,7 @@
                 <li><a href="#portfolio" class="nav-trigger">Portfolio</a></li>
                 <li><a href="#team" class="nav-trigger">Team</a></li>
                 <li><a href="#research" class="nav-trigger">Research</a></li>
+                <li><a href="#" id="navBookBtn" class="btn-pill-booking">Book a Call</a></li>
                 <li><a href="#contact" class="nav-trigger btn-pill-cyan">Reach Out</a></li>
             </ul>
             <button class="hamburger" id="hamburgerBtn">
@@ -102,6 +105,7 @@
                     </h1>
                     <p>Scalable technology built for the real world — engineered under pressure, delivered without compromise. We exist at the intersection of grit and innovation, where complex challenges become systems that outlast the problems that created them. Across industries, across stacks — built to last.</p>
                     <div class="hero-actions">
+                        <a href="#" id="heroBookBtn" class="btn-pill-booking">Book a Call</a>
                         <a href="#contact" class="btn-pill-cyan nav-trigger">Reach Out</a>
                         <a href="#services" class="btn-ghost nav-trigger">View Services</a>
                     </div>
@@ -928,9 +932,12 @@
     <div class="dotty-panel" id="dottyPanel">
         <div class="dotty-header">
             <h4>Dotty</h4>
-            <button class="dotty-close" id="dottyClose">
-                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-            </button>
+            <div class="dotty-header-actions">
+                <button class="btn-dotty-book" id="dottyBookBtn">Book Call</button>
+                <button class="dotty-close" id="dottyClose">
+                    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                </button>
+            </div>
         </div>
         <div class="dotty-messages" id="dottyMessages">
             <div class="chat-msg msg-bot">Hey, I'm Dotty. Your guide to everything Zedot — ask me anything.</div>
@@ -943,6 +950,8 @@
         </form>
     </div>
 
+    <!-- Calendly popup widget script -->
+    <script src="https://assets.calendly.com/assets/external/widget.js" type="text/javascript" async></script>
     <script src="app.js"></script>
 </body>
 </html>
